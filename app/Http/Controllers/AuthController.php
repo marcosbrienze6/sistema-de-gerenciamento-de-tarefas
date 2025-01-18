@@ -89,6 +89,26 @@ class AuthController extends Controller
         'success' => true, 'message' => 'Senha redefinida com sucesso.']);
     }
 
+    public function friendRequest(Request $request)
+    {
+        $email = $request->input('email');
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            return response()->json(['error' => 'Usuário não encontrado.'], 404);
+        }
+
+        $data = [
+        'title' => 'Fulano quer contato!',
+        'body' => 'Para aceitar o pedido de amizade, clique no botão',
+        'link' => url('/api/auth/friend-request')
+        ];
+
+        Mail::send('abandonedCart', compact('data'), fn($message) => $message->to($email)->subject('Alerta de Oferta'));
+
+        return response()->json(['success' => true, 'message' => 'Solicitação de amizade recebido!']);
+    }
+
     public function update(UpdateUserRequest $request)
     {
         $user = Auth::user();

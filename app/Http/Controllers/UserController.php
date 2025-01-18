@@ -42,9 +42,19 @@ class UserController extends Controller
         'user' => $user], 201);
     }
 
-    public function delete(User $user)
+    public function delete($userId)
     {
-        $user->delete();
-        return response()->json(['message' => 'Usuário deletado com sucesso.']);
+        $user = $this->modelInstance->find($userId);
+        if (isset($user)) {
+            return response()->json([
+            'error' => false,
+            'data' => $user
+            ], 200);
+        }
+
+        return response()->json([
+        'error' => true,
+        'message' => "Usuário não encontrado.",
+        ], 404);
     }
 }

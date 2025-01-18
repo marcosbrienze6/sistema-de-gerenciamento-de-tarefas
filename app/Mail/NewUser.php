@@ -9,45 +9,27 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class NewUser extends Mailable
+class Newuser extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
-     * Get the message envelope.
-     */
-    public function envelope(): Envelope
-    {
-        return new Envelope(
-            subject: 'New User',
-        );
-    }
-
-    /**
-     * Get the message content definition.
-     */
-    public function content(): Content
-    {
-        return new Content(
-            view: 'view.name',
-        );
-    }
-
-    /**
-     * Get the attachments for the message.
+     * 
      *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     * @return void
      */
-    public function attachments(): array
+
+    public $data;
+
+    public function __construct($data)
     {
-        return [];
+        $this->data =$data;
+    }
+
+    public function build()
+    {
+        // return $this->view('view.name');
+        return $this->subject($this->data->title)->view('friendRequest')->with('data', $this->data);
     }
 }
